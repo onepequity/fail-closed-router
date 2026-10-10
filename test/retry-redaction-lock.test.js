@@ -5,8 +5,8 @@ import { KEYS, chatReply, errorResponse, mockFetch } from "./helpers.js";
 
 const lanes = {
   classify: [
-    { provider: "openai", model: "gpt-4.1-mini", ...KEYS },
-    { provider: "xai", model: "grok-3-mini", ...KEYS }
+    { provider: "openai", model: "gpt-5.4-nano", ...KEYS },
+    { provider: "xai", model: "grok-4.7", ...KEYS }
   ]
 };
 
@@ -83,31 +83,31 @@ test("tokens echoed by a provider never reach attempts or the thrown error", asy
 // ---- lock ------------------------------------------------------------------
 
 test("a matching lock is accepted in every entry format", () => {
-  const lock = { classify: ["openai:gpt-4.1-mini", ["xai", "grok-3-mini"]] };
+  const lock = { classify: ["openai:gpt-5.4-nano", ["xai", "grok-4.7"]] };
   assert.doesNotThrow(() => createRouter({ lanes, lock, fetch: async () => chatReply({}) }));
-  assert.equal(validateLock(lanes, { classify: [{ provider: "openai", model: "gpt-4.1-mini" }, "xai:grok-3-mini"] }), true);
+  assert.equal(validateLock(lanes, { classify: [{ provider: "openai", model: "gpt-5.4-nano" }, "xai:grok-4.7"] }), true);
 });
 
 test("the lock rejects reordering, substitution, and uncovered or missing lanes at startup", () => {
   const fetch = async () => chatReply({});
-  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["xai:grok-3-mini", "openai:gpt-4.1-mini"] } }), (error) => {
+  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["xai:grok-4.7", "openai:gpt-5.4-nano"] } }), (error) => {
     assert.ok(error instanceof ConfigError);
     assert.match(error.message, /classify: fallback order drift/);
     return true;
   });
-  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["openai:gpt-4.1", "xai:grok-3-mini"] } }), /fallback order drift/);
-  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["openai:gpt-4.1-mini"] } }), /fallback order drift/);
-  assert.throws(() => createRouter({ lanes: { ...lanes, judge: lanes.classify }, fetch, lock: { classify: ["openai:gpt-4.1-mini", "xai:grok-3-mini"] } }), /judge: lane is not covered by the lock/);
-  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["openai:gpt-4.1-mini", "xai:grok-3-mini"], extract: ["openai:m"] } }), /extract: locked lane is missing/);
+  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["openai:gpt-4.1", "xai:grok-4.7"] } }), /fallback order drift/);
+  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["openai:gpt-5.4-nano"] } }), /fallback order drift/);
+  assert.throws(() => createRouter({ lanes: { ...lanes, judge: lanes.classify }, fetch, lock: { classify: ["openai:gpt-5.4-nano", "xai:grok-4.7"] } }), /judge: lane is not covered by the lock/);
+  assert.throws(() => createRouter({ lanes, fetch, lock: { classify: ["openai:gpt-5.4-nano", "xai:grok-4.7"], extract: ["openai:m"] } }), /extract: locked lane is missing/);
 });
 
 test("routes are frozen at startup, so later mutation cannot drift past the lock", async () => {
-  const mutable = { classify: [{ provider: "openai", model: "gpt-4.1-mini", ...KEYS }] };
+  const mutable = { classify: [{ provider: "openai", model: "gpt-5.4-nano", ...KEYS }] };
   const { fetch, calls } = mockFetch({ "api.openai.com": chatReply({ label: "ok" }) });
-  const router = createRouter({ lanes: mutable, fetch, lock: { classify: ["openai:gpt-4.1-mini"] } });
+  const router = createRouter({ lanes: mutable, fetch, lock: { classify: ["openai:gpt-5.4-nano"] } });
   mutable.classify[0].model = "something-else";
   mutable.classify.push({ provider: "xai", model: "x", ...KEYS });
   await router.runJson({ lane: "classify", prompt: "p" });
-  assert.equal(calls[0].body.model, "gpt-4.1-mini");
+  assert.equal(calls[0].body.model, "gpt-5.4-nano");
   assert.equal(router.lanes.classify.length, 1);
 });

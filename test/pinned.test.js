@@ -9,8 +9,8 @@ import { KEYS, SCHEMA, chatReply, errorResponse, mockFetch } from "./helpers.js"
 const lanes = {
   extract: [
     { provider: "openai", model: "fast-model", ...KEYS },
-    { provider: "anthropic", model: "claude-sonnet-4-5", temperature: 0, ...KEYS },
-    { provider: "xai", model: "grok-3-mini", temperature: 0, ...KEYS },
+    { provider: "anthropic", model: "claude-sonnet-5", temperature: 0, ...KEYS },
+    { provider: "xai", model: "grok-4.7", temperature: 0, ...KEYS },
     { provider: "openai", model: "careful-model", temperature: 0, baseUrl: "https://second.example/v1", ...KEYS }
   ]
 };
@@ -101,7 +101,7 @@ test("an unreachable pinned leg returns the original rejected answer, clearly ma
   assert.equal(result.pinned, false);
   assert.equal(result.accepted, false);
   assert.deepEqual(result.correctedRetry, {
-    attempted: true, outcome: "unavailable", failureClass: "provider_unavailable", provider: "xai", model: "grok-3-mini",
+    attempted: true, outcome: "unavailable", failureClass: "provider_unavailable", provider: "xai", model: "grok-4.7",
     reason: "empty_label", fromProvider: "openai", fromModel: "fast-model"
   });
 });

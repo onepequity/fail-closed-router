@@ -60,12 +60,12 @@ import { createRouter, memoryCache } from "fail-closed-router";
 const router = createRouter({
   lanes: {
     classify: [
-      { provider: "openai", model: "gpt-4.1-mini", credentialEnv: "OPENAI_API_KEY" },
-      { provider: "xai", model: "grok-3-mini", temperature: 0, credentialEnv: "XAI_API_KEY" },
-      { provider: "anthropic", model: "claude-sonnet-4-5", credentialEnv: "ANTHROPIC_API_KEY" }
+      { provider: "openai", model: "gpt-5.4-nano", credentialEnv: "OPENAI_API_KEY" },
+      { provider: "xai", model: "grok-4.7", temperature: 0, credentialEnv: "XAI_API_KEY" },
+      { provider: "anthropic", model: "claude-sonnet-5", credentialEnv: "ANTHROPIC_API_KEY" }
     ]
   },
-  lock: { classify: ["openai:gpt-4.1-mini", "xai:grok-3-mini", "anthropic:claude-sonnet-4-5"] },
+  lock: { classify: ["openai:gpt-5.4-nano", "xai:grok-4.7", "anthropic:claude-sonnet-5"] },
   cache: memoryCache()
 });
 
@@ -79,7 +79,7 @@ const result = await router.runJson({
 console.log(result.data, result.provider, result.accepted);
 ```
 
-If `gpt-4.1-mini` is down, the call moves to `grok-3-mini`. If `gpt-4.1-mini` answers `"other"`, the validator rejects it and the router makes one corrected attempt on `grok-3-mini`, which is pinned (temperature 0 plus strict schema). If any provider returns malformed JSON, the call throws.
+If `gpt-5.4-nano` is down, the call moves to `grok-4.7`. If `gpt-5.4-nano` answers `"other"`, the validator rejects it and the router makes one corrected attempt on `grok-4.7`, which is pinned (temperature 0 plus strict schema). If any provider returns malformed JSON, the call throws.
 
 ## API reference
 
@@ -163,7 +163,7 @@ If the pinned leg is unreachable during the corrected retry (an infrastructure f
 
 ```js
 lock: {
-  extract: ["openai:gpt-4.1-mini", ["xai", "grok-3-mini"]],
+  extract: ["openai:gpt-5.4-nano", ["xai", "grok-4.7"]],
   judge: [{ provider: "openai", model: "gpt-4.1" }]
 }
 ```

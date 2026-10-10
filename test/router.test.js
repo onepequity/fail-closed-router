@@ -9,9 +9,9 @@ const ANTHROPIC = "api.anthropic.com";
 
 const lanes = {
   classify: [
-    { provider: "openai", model: "gpt-4.1-mini", ...KEYS },
-    { provider: "xai", model: "grok-3-mini", ...KEYS },
-    { provider: "anthropic", model: "claude-sonnet-4-5", ...KEYS }
+    { provider: "openai", model: "gpt-5.4-nano", ...KEYS },
+    { provider: "xai", model: "grok-4.7", ...KEYS },
+    { provider: "anthropic", model: "claude-sonnet-5", ...KEYS }
   ]
 };
 
@@ -186,7 +186,7 @@ test("baseUrl points a built-in transport at any compatible endpoint", async () 
 
 test("Anthropic request carries the schema as an instruction and parses text blocks", async () => {
   const { fetch, calls } = mockFetch({ [ANTHROPIC]: anthropicReply({ label: "ok" }) });
-  const router = createRouter({ lanes: { judge: [{ provider: "anthropic", model: "claude-sonnet-4-5", ...KEYS }] }, fetch });
+  const router = createRouter({ lanes: { judge: [{ provider: "anthropic", model: "claude-sonnet-5", ...KEYS }] }, fetch });
   const result = await router.runJson({ lane: "judge", prompt: "hi", system: "sys", schema: SCHEMA });
   assert.deepEqual(result.data, { label: "ok" });
   assert.equal(calls[0].url, "https://api.anthropic.com/v1/messages");
