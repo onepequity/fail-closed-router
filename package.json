@@ -1,0 +1,44 @@
+{
+  "name": "fail-closed-router",
+  "version": "0.1.0",
+  "description": "Fail-closed structured-output routing across LLM providers: infrastructure failures fall through, bad answers stop the chain.",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./file-cache": {
+      "types": "./src/file-cache.d.ts",
+      "default": "./src/file-cache.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "llm",
+    "router",
+    "fallback",
+    "structured-output",
+    "json-schema",
+    "openai",
+    "anthropic",
+    "xai",
+    "fail-closed"
+  ],
+  "author": "Nathan Rone",
+  "license": "MIT"
+}

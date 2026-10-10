@@ -1,0 +1,9 @@
+node_modules/
+coverage/
+.answer-cache/
+*.log
+*.tmp
+.env
+.env.*
+.DS_Store
+*.tgz
