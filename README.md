@@ -47,7 +47,7 @@ With a cache configured, every call is keyed by a SHA-256 of everything that sha
 ## Install
 
 ```sh
-npm install fail-closed-router
+npm install github:onepequity/fail-closed-router
 ```
 
 Requires Node 20 or newer, or any runtime with `fetch`, `AbortController` and Web Crypto. Zero dependencies.
